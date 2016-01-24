@@ -14,7 +14,7 @@ var moduleOne = Flexic.createModule("moduleName")
 
 
 Flexic.useModule("moduleName")
-    .run()
+    .run([1, 2])
     .success(console.log(response))
     .error(console.log(reponse));
 

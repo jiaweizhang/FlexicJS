@@ -1,34 +1,34 @@
 var Module = function Module (moduleName) {
-    var moduleName = moduleName;
-    var type = null;
-    var bodyData  = null;
-    var argArray  = null;
-    var path  = null;
-    var headerMap = null;
-    var args = function(argArray) {
+    this.moduleName = moduleName;
+    this.type = null;
+    this.bodyData  = null;
+    this.argArray  = null;
+    this.path  = null;
+    this.headerMap = null;
+    this.args = function(argArray) {
         // create map/list with args
     };
-    var setType = function(type) {
+    this.setType = function(type) {
         // check if type is valid
         this.type = type;
     };
-    var setPath = function(path) {
+    this.setPath = function(path) {
         parsePath(path);
     };
     var parsePath = function(path) {
         // make private if possible
         // parse the path and "assign" any args to the map in argArray
     };
-    var setHeader = function(header, value) {
+    this.setHeader = function(header, value) {
         // put into a map, assigning any values to args to the map in argArray
     };
-    var body = function(data) {
+    this.setBody = function(data) {
         this.bodyData = data;
     };
-    var success = function() {
+    this.success = function() {
         // return response
     };
-    var error = function() {
+    this.error = function() {
         // return response
     }
 };
@@ -50,8 +50,10 @@ var Flexic = {
 };
 
 
-var ModuleRunner = function ModuleRunner() {
-    var run = function() {
+var ModuleRunner = function ModuleRunner(module) {
+    var module = module;
+    var run = function(args) {
         // run the module
+
     }
 };
