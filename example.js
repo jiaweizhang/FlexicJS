@@ -1,21 +1,16 @@
+console.log("beginning example.js");
 
-
-var moduleOne = Flexic.createModule("moduleName")
-    .args(["groupId", "subgroupId"])
-    .setType("GET")
-    .setPath("/api/groups/:groupId/:subgroupId")
-    .setHeader("Content-type", "application/json")
-    .success()
-    .error();
+Flexic.createModule('moduleOne')
+    .setArgs([])
+    .setType('GET')
+    .setPath('http://httpbin.org/get');
 
 
 
-
-
-
-Flexic.useModule("moduleName")
-    .run([1, 2])
-    .success(console.log(response))
-    .error(console.log(reponse));
-
+Flexic.useModule('moduleOne')
+    .run([])
+    .then(function callback(response){
+        console.log('something here');
+        console.log(response);
+    });
 

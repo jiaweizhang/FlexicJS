@@ -1,59 +1,66 @@
-var Module = function Module (moduleName) {
-    this.moduleName = moduleName;
-    this.type = null;
-    this.bodyData  = null;
-    this.argArray  = null;
-    this.path  = null;
-    this.headerMap = null;
-    this.args = function(argArray) {
+var Module = function Module (name) {
+    moduleName = name;
+    argMap = {};
+    headerMap = {};;
+    this.setArgs = function(argArray) {
         // create map/list with args
+        return this;
     };
-    this.setType = function(type) {
+    this.setType = function(typeInput) {
         // check if type is valid
-        this.type = type;
+        type = typeInput;
+        return this;
     };
     this.setPath = function(path) {
         parsePath(path);
+        return this;
     };
-    var parsePath = function(path) {
+    var parsePath = function(pathInput) {
+        path = pathInput;
         // make private if possible
         // parse the path and "assign" any args to the map in argArray
     };
     this.setHeader = function(header, value) {
         // put into a map, assigning any values to args to the map in argArray
+        return this;
     };
     this.setBody = function(data) {
         this.bodyData = data;
+        return this;
     };
-    this.success = function() {
-        // return response
+    this.run = function(args) {
+        // actually use these args here
+        // check if args is null or undefined
+        // iterate through args otherwise
+        console.log('started run request');
+        var xhttp = new XMLHttpRequest();
+        xhttp.open(type, path, false);
+        xhttp.send();
+        response = xhttp.responseText;
+        console.log(response);
+        console.log(xhttp.responseText);
+        return this;
     };
-    this.error = function() {
-        // return response
-    }
+    this.then = function(callback) {
+        callback("some random response text here");
+        callback(response);
+    };
 };
 
-
+var modules = {};
 
 var Flexic = {
     createModule : function(moduleName) {
         var newModule = new Module(moduleName);
         // store newModule in datastructure
+        modules[moduleName] = newModule;
         return newModule;
     },
     useModule : function(moduleName) {
         // use module stored in datastructure
-        // initialize ModuleRunner
-        var moduleRunner = new ModuleRunner("get module");
-        return moduleRunner;
+        console.log(modules[moduleName]);
+        return modules[moduleName];
     }
 };
 
 
-var ModuleRunner = function ModuleRunner(module) {
-    var module = module;
-    var run = function(args) {
-        // run the module
-
-    }
-};
