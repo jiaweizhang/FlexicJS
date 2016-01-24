@@ -1,9 +1,13 @@
-var Module = function Module (name) {
-    moduleName = name;
+var Module = function Module () {
     argMap = {};
+    argIndex = {};
     headerMap = {};
     this.setArgs = function(argArray) {
         // create map/list with args
+        for (var i=0; i<argArray.length; i++) {
+            argMap[argArray[i]] = null;
+            argIndex[i] = argArray[i];
+        }
         return this;
     };
     this.setType = function(typeInput) {
@@ -22,16 +26,24 @@ var Module = function Module (name) {
     };
     this.setHeader = function(header, value) {
         // put into a map, assigning any values to args to the map in argArray
+        headerMap[header] = value;
         return this;
     };
     this.setBody = function(data) {
-        this.bodyData = data;
+        bodyData = data;
         return this;
     };
     this.run = function(args, success, error) {
         // actually use these args here
         // check if args is null or undefined
         // iterate through args otherwise
+        console.log('args in run:');
+        console.log(JSON.stringify(args));
+        for (var i=0; i<args.length; i++) {
+            var actualArgName = argIndex[i];
+            console.log('actualArgName: '+actualArgName);
+            argMap[actualArgName] = args[i];
+        }
 
         console.log('started run request');
 
@@ -60,8 +72,48 @@ var Module = function Module (name) {
 
         http.onreadystatechange=handleStateChange;
         http.open(requestType, url, true);
-        http.setRequestHeader("Content-type", "application/json"); // hardcoded change later
-        http.send(null);
+
+        for (var key in headerMap) {
+            if (headerMap.hasOwnProperty(key)) {
+                // if the value begins with :
+                var value = headerMap[key];
+                if (value.indexOf(':')==0) {
+                    // replace the valid with the value from the argMap
+                    var realValue = value.substring(1);
+                    http.setRequestHeader(key, argMap[realValue]);
+                    console.log('key: '+key+', value: '+argMap[realValue]);
+                } else {
+                    http.setRequestHeader(key, headerMap[key]);
+                }
+                //alert(key + " -> " + p[key]);
+            }
+        }
+
+        // if body has to be replaced
+        if (bodyData.indexOf(':')==0) {
+            var bodyVar = bodyData.substring(1);
+            bodyData = argMap[bodyVar];
+        }
+
+        //http.setRequestHeader("Content-type", "application/json"); // hardcoded change later
+
+        console.log('argMap:');
+        console.log(JSON.stringify(argMap));
+        console.log('headerMap:');
+        console.log(JSON.stringify(headerMap));
+        console.log('argIndex:');
+        console.log(JSON.stringify(argIndex));
+
+        http.send(bodyData);
+
+
+    };
+    this.then = function(success, failure) {
+        // asynchronous so only execute after run.handleResponse is completed
+
+        // if success, call success
+
+        // if failure, call failure
 
 
     };
