@@ -8,9 +8,12 @@ Flexic.createModule('moduleOne')
 
 
 Flexic.useModule('moduleOne')
-    .run([])
-    .then(function callback(response){
-        console.log('something here');
+    .run([], function success(response) {
+            console.log('success here');
+            console.log(response);
+    },
+    function error(response){
+        console.log("error");
         console.log(response);
     });
 

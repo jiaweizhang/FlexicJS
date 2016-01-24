@@ -1,7 +1,7 @@
 var Module = function Module (name) {
     moduleName = name;
     argMap = {};
-    headerMap = {};;
+    headerMap = {};
     this.setArgs = function(argArray) {
         // create map/list with args
         return this;
@@ -28,22 +28,42 @@ var Module = function Module (name) {
         this.bodyData = data;
         return this;
     };
-    this.run = function(args) {
+    this.run = function(args, success, error) {
         // actually use these args here
         // check if args is null or undefined
         // iterate through args otherwise
+
         console.log('started run request');
-        var xhttp = new XMLHttpRequest();
-        xhttp.open(type, path, false);
-        xhttp.send();
-        response = xhttp.responseText;
-        console.log(response);
-        console.log(xhttp.responseText);
-        return this;
-    };
-    this.then = function(callback) {
-        callback("some random response text here");
-        callback(response);
+
+        var handleResponse = function (status, responseText) {
+            response = responseText;
+            success(response);
+        };
+        var handleStateChange = function () {
+            switch (http.readyState) {
+                case 0 : // UNINITIALIZED
+                case 1 : // LOADING
+                case 2 : // LOADED
+                case 3 : // INTERACTIVE
+                    break;
+                case 4 : // COMPLETED
+                    handleResponse(http.status, http.responseText);
+                    return this;
+                    break;
+                default: alert("error");
+            }
+        };
+
+        var http=new XMLHttpRequest();
+        var url = path; // fill in here
+        var requestType = type; // check if valid (or maybe check upon setting)
+
+        http.onreadystatechange=handleStateChange;
+        http.open(requestType, url, true);
+        http.setRequestHeader("Content-type", "application/json"); // hardcoded change later
+        http.send(null);
+
+
     };
 };
 
