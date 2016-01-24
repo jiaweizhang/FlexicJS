@@ -1,7 +1,7 @@
 var Module = function Module (name) {
     moduleName = name;
     argMap = {};
-    headerMap = {};;
+    headerMap = {};
     this.setArgs = function(argArray) {
         // create map/list with args
         return this;
