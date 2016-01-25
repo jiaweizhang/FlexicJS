@@ -1,7 +1,12 @@
-var Module = function Module () {
+var FlexicModule = function FlexicModule () {
     argMap = {};
     argIndex = {};
     headerMap = {};
+    asyncMode = true;
+    this.setAsync = function(async) {
+        asyncMode = async;
+        return this;
+    };
     this.setArgs = function(argArray) {
         // create map/list with args
         for (var i=0; i<argArray.length; i++) {
@@ -71,7 +76,7 @@ var Module = function Module () {
         var requestType = type; // check if valid (or maybe check upon setting)
 
         http.onreadystatechange=handleStateChange;
-        http.open(requestType, url, true);
+        http.open(requestType, url, asyncMode);
 
         for (var key in headerMap) {
             if (headerMap.hasOwnProperty(key)) {
@@ -85,7 +90,6 @@ var Module = function Module () {
                 } else {
                     http.setRequestHeader(key, headerMap[key]);
                 }
-                //alert(key + " -> " + p[key]);
             }
         }
 
@@ -119,19 +123,18 @@ var Module = function Module () {
     };
 };
 
-var modules = {};
+var FlexicModules = {};
 
 var Flexic = {
     createModule : function(moduleName) {
-        var newModule = new Module(moduleName);
+        var newModule = new FlexicModule(moduleName);
         // store newModule in datastructure
-        modules[moduleName] = newModule;
+        FlexicModules[moduleName] = newModule;
         return newModule;
     },
     useModule : function(moduleName) {
         // use module stored in datastructure
-        console.log(modules[moduleName]);
-        return modules[moduleName];
+        return FlexicModules[moduleName];
     }
 };
 
