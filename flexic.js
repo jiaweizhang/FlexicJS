@@ -18,7 +18,24 @@ var FlexicModule = function FlexicModule () {
     this.setType = function(typeInput) {
         // check if type is valid
         type = typeInput;
-        return this;
+        if(type === 'GET'){
+
+        }
+        else if(type === 'POST'){
+
+        }
+        else if(type === 'DELETE'){
+
+        }
+        else if(type === 'PUT'){
+
+        }
+        else if(type === 'HEAD'){
+
+        }
+        else{
+            //throw exception here bc not a supported HTTP request
+        }
     };
     this.setPath = function(path) {
         parsePath(path);
