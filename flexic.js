@@ -1,79 +1,60 @@
-var FlexicModule = function FlexicModule() {
+var FlexicModule = function FlexicModule () {
     argMap = {};
     argIndex = {};
-    type = '';
-    host = '';
     headerMap = {};
     asyncMode = true;
-    this.setAsync = function (async) {
+    this.setAsync = function(async) {
         asyncMode = async;
         return this;
     };
-    this.setArgs = function (argArray) {
+    this.setArgs = function(argArray) {
         // create map/list with args
-        for (var i = 0; i < argArray.length; i++) {
-            argMap[argArray[i]] = null; //TODO: <-- what is this? argArray[i] is going to be a string, not an index
+        for (var i=0; i<argArray.length; i++) {
+            argMap[argArray[i]] = null;
             argIndex[i] = argArray[i];
         }
         return this;
     };
-    this.setType = function (typeInput) {
+    this.setType = function(typeInput) {
         // check if type is valid
-        //TODO: enums if possible for this
-        if (typeInput === 'GET' ||
-            typeInput === 'PUT' ||
-            typeInput === 'POST' ||
-            typeInput === 'DELETE' ||
-            typeInput === 'HEAD') {
-            type = typeInput;
-        }
-        else {
-            //throw exception here bc not a supported HTTP request
-            throw 'Unsupported HTTP request';
-        }
-    };
-    this.setHost = function (host) {
-        parseHost(host);
+        type = typeInput;
         return this;
     };
-    var parseHost = function (hostInput) {
-        host = hostInput;
-        //TODO: make private if possible
-        // parse the host and "assign" any args to the map in argArray
-
+    this.setPath = function(path) {
+        parsePath(path);
+        return this;
     };
-    this.setHeader = function (header, value) {
+    var parsePath = function(pathInput) {
+        path = pathInput;
+        // make private if possible
+        // parse the path and "assign" any args to the map in argArray
+    };
+    this.setHeader = function(header, value) {
         // put into a map, assigning any values to args to the map in argArray
         headerMap[header] = value;
         return this;
     };
-    this.setBody = function (data) {
+    this.setBody = function(data) {
         bodyData = data;
         return this;
     };
-    this.run = function (args, //array of args
-                         success, //func run on success
-                         error) { //func run on error
+    this.run = function(args, success, error) {
         // actually use these args here
         // check if args is null or undefined
         // iterate through args otherwise
         console.log('args in run:');
         console.log(JSON.stringify(args));
-        for (var i = 0; i < args.length; i++) {
+        for (var i=0; i<args.length; i++) {
             var actualArgName = argIndex[i];
-            console.log('actualArgName: ' + actualArgName);
+            console.log('actualArgName: '+actualArgName);
             argMap[actualArgName] = args[i];
         }
 
         console.log('started run request');
 
         var handleResponse = function (status, responseText) {
-            if(status == 200){ //status = OK
-                success(responseText);
-            }
-            else{
-                //TODO: Handle depending on other statuses
-            }
+            response = responseText;
+            success(response);
         };
         var handleStateChange = function () {
             switch (http.readyState) {
@@ -86,27 +67,26 @@ var FlexicModule = function FlexicModule() {
                     handleResponse(http.status, http.responseText);
                     return this;
                     break;
-                default:
-                    alert("error");
+                default: alert("error");
             }
         };
 
-        var http = new XMLHttpRequest();
-        var url = host;
-        var requestType = type;
+        var http=new XMLHttpRequest();
+        var url = path; // fill in here
+        var requestType = type; // check if valid (or maybe check upon setting)
 
-        http.onreadystatechange = handleStateChange;
+        http.onreadystatechange=handleStateChange;
         http.open(requestType, url, asyncMode);
 
         for (var key in headerMap) {
             if (headerMap.hasOwnProperty(key)) {
                 // if the value begins with :
                 var value = headerMap[key];
-                if (value.indexOf(':') == 0) {
+                if (value.indexOf(':')==0) {
                     // replace the valid with the value from the argMap
                     var realValue = value.substring(1);
                     http.setRequestHeader(key, argMap[realValue]);
-                    console.log('key: ' + key + ', value: ' + argMap[realValue]);
+                    console.log('key: '+key+', value: '+argMap[realValue]);
                 } else {
                     http.setRequestHeader(key, headerMap[key]);
                 }
@@ -114,7 +94,7 @@ var FlexicModule = function FlexicModule() {
         }
 
         // if body has to be replaced
-        if (bodyData.indexOf(':') == 0) {
+        if (bodyData.indexOf(':')==0) {
             var bodyVar = bodyData.substring(1);
             bodyData = argMap[bodyVar];
         }
@@ -132,12 +112,13 @@ var FlexicModule = function FlexicModule() {
 
 
     };
-    this.then = function (success, failure) {
-        // asynchronous so only execute after run.handleResponse is completed TODO: do you mean this is synchronous?
-        //TODO: Isn't this already handled when you pass in the success and failure function in run?
+    this.then = function(success, failure) {
+        // asynchronous so only execute after run.handleResponse is completed
+
         // if success, call success
 
         // if failure, call failure
+
 
     };
 };
@@ -145,16 +126,15 @@ var FlexicModule = function FlexicModule() {
 var FlexicModules = {};
 
 var Flexic = {
-    createModule: function (moduleName) {
+    createModule : function(moduleName) {
         var newModule = new FlexicModule(moduleName);
         // store newModule in datastructure
         FlexicModules[moduleName] = newModule;
         return newModule;
     },
-    useModule: function (moduleName) {
+    useModule : function(moduleName) {
         // use module stored in datastructure
         return FlexicModules[moduleName];
     }
 };
-
 

@@ -1,18 +1,17 @@
 console.log("beginning example.js");
 
-var exampleModule = new FlexicModule()
+Flexic.createModule('moduleOne')
     .setArgs(['arg1', 'arg2', 'arg3'])
     .setType('POST')
-    .setHost('http://httpbin.org/post')
+    .setPath('http://httpbin.org/post')
     .setBody(':arg3')
     .setHeader('Content-type', ':arg2')
     .setHeader('Authorization', ':arg1');
 
 
 
-exampleModule.useModule()
-    .run(['Bearer ', 'application/json', 'some body here'],
-        function success(response) {
+Flexic.useModule('moduleOne')
+    .run(['Bearer ', 'application/json', 'some body here'], function success(response) {
             console.log('success here');
             console.log(response);
         },
@@ -20,6 +19,7 @@ exampleModule.useModule()
             console.log("error");
             console.log(response);
         });
+
 
 
 // Desired syntax:
